@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.OleDb;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,6 +37,7 @@ namespace ConsoleTestApp
                    foreach(DataRow row in dataTabel.Rows)
                     {
                         Console.WriteLine();
+                        Console.Write("\t");
                         foreach (var item in row.ItemArray)
                         {                           
                             Console.Write(item);
@@ -42,8 +45,42 @@ namespace ConsoleTestApp
                         }
                     }
                     Console.ReadLine();
+
+
+
+                    
+             
+
+                    //Create Excel Connection
+                    string ConStr;
+                    string HDR;
+                    HDR = "YES";
+                    ConStr = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source="
+                        + filePath + ";Extended Properties=\"Excel 12.0;HDR=" + HDR + ";IMEX=0\"";
+                    OleDbConnection cnn = new OleDbConnection(ConStr);
+
+                    //Get data from Excel Sheet to DataTable
+                    OleDbConnection Connection = new OleDbConnection(ConStr);
+                    Connection.Open();
+                    OleDbCommand oconn = new OleDbCommand("select * from [Sheet2 $]", Connection);
+                    OleDbDataAdapter adp = new OleDbDataAdapter(oconn);
+                    DataTable dt = new DataTable();
+                    adp.Fill(dt);
+                    Connection.Close();
+
+                    connection.Open();
+                    //Load Data from DataTable to SQL Server Table.
+                    using (SqlBulkCopy BC = new SqlBulkCopy(ConStr))
+                    {
+                       // BC.DestinationTableName = Tracker + "." + tblCustomer;
+                        foreach (var column in dt.Columns)
+                            BC.ColumnMappings.Add(column.ToString(), column.ToString());
+                        BC.WriteToServer(dt);
+                    }
+                    connection.Close();
                 }
             }
         }
+        
     }
 }
