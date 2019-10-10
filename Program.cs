@@ -15,11 +15,6 @@ namespace ConsoleTestApp
 {
     class Program
     {
-        /// <summary>
-        /// This method returns excelsheet of specified path in parameter
-        /// </summary>
-        /// <param name="path">Excel Sheet Parameter</param>
-        /// <returns>Returns excel sheet in dataTable format</returns>
         public DataTable getExcelSheet(string path)
         {
             DataTable excelData = new DataTable();
