@@ -28,7 +28,7 @@ namespace ConsoleTestApp
             conString = string.Format(excelConString, path);
             try
             {
-                using (OleDbConnection connection = new OleDbConnection(conString))
+                using (OleDbConnection connection = new OleDbConnection(conString)) 
                 {
                     connection.Open();
                     using (OleDbCommand excelCommand = new OleDbCommand("select * from [DailyUpdate$]", connection))
